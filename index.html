@@ -39,8 +39,8 @@
     </div>
 
     <script>
-        // URLs do seu repositório no GitHub
-        const URL_CORE = "https://raw.githubusercontent.com/instituto-delyone/CSI-/main/data/csi_core.json";
+        // URLs Corrigidas: Apontando para o csi_master e csi_sintomas exatamente como estão na pasta data
+        const URL_CORE = "https://raw.githubusercontent.com/instituto-delyone/CSI-/main/data/csi_master.json";
         const URL_SINTOMAS = "https://raw.githubusercontent.com/instituto-delyone/CSI-/main/data/csi_sintomas.json";
 
         let bancoDeDados = [];
@@ -50,6 +50,9 @@
             try {
                 const [resCore, resSintomas] = await Promise.all([ fetch(URL_CORE), fetch(URL_SINTOMAS) ]);
                 
+                // Se algum arquivo der Erro 404, paramos aqui
+                if (!resCore.ok || !resSintomas.ok) throw new Error("Arquivo não encontrado no servidor.");
+
                 const core = await resCore.json();
                 const sintomas = await resSintomas.json();
 
@@ -67,7 +70,7 @@
             } catch (error) {
                 document.getElementById('led').style.background = "#e06c75";
                 document.getElementById('status-text').innerText = "Falha na conexão com o GitHub.";
-                escreverConsole("ERRO: Não foi possível baixar os dados. Verifique sua internet ou o link do repositório.");
+                escreverConsole("ERRO: Não foi possível baixar os dados. Verifique sua internet ou o link do repositório.\nDetalhe: " + error.message);
             }
         }
 
