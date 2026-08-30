@@ -14,3 +14,6 @@ Inglês: "Fever"
 Português: "Febre"
 Espanhol: "Fiebre"
 Gíria Regional: "Corpo quente"
+Resultado no CSI: Todos os termos acima convergem para a âncora ⁠[003.001.FEBRE]⁠. O motor de processamento (IA ou software de prontuário) não se confunde com o idioma; ele processa o código central.
+O CSI é a matriz que garante que a inteligência artificial do futuro não precise adivinhar a semiologia humana, pois a linguagem já estará ancorada e estruturada.
+Esse texto já dá o peso e a autoridade que o projeto precisa para quem for ler o repositório.
