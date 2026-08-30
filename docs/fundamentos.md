@@ -8,3 +8,9 @@ O CSI atua como uma coluna vertebral (âncora) de significados. Ele agrega termo
  Escalabilidade Infinita: Novos jargões, gírias de pacientes ou acrônimos médicos podem ser adicionados à base sem alterar a estrutura central.
 O Racional na Prática
 Enquanto o diagnóstico de diabetes possui seu código universal (CID), as nuances semiológicas associadas a ele se perdem na tradução. Com o CSI, a máquina compreende o contexto:
+Exemplo Prático: 
+O Sinal "Febre"
+Inglês: "Fever"
+Português: "Febre"
+Espanhol: "Fiebre"
+Gíria Regional: "Corpo quente"
