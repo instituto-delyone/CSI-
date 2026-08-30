@@ -1,1 +1,94 @@
-placeholder
+{
+  "__INSTRUCOES_DE_EXPANSAO_LEXICAL__": {
+    "objetivo": "Base de dados lexical PT-BR (Brasil). Contem variacoes culturais, girias de pacientes, jargoes medicos e abreviacoes.",
+    "diretriz": "O sistema deve ler a entrada do paciente ou medico, buscar correspondencia na lista 'variacoes_br', converter para o 'termo_padrao' e enviar para a 'ancora_destino' no CSI Core.",
+    "arquiteto": "Primeiro Meta-Engenheiro da Linguagem"
+  },
+  
+  "mapeamento_regional": [
+    {
+      "ancora_destino": "004.001.",
+      "termo_padrao": "Lombalgia",
+      "variacoes_br": [
+        "espinha caída", 
+        "dor nos quartos", 
+        "dor nas cruzes", 
+        "dor nas costas", 
+        "travou a coluna", 
+        "ciático atacado"
+      ]
+    },
+    {
+      "ancora_destino": "004.001.",
+      "termo_padrao": "Acidente Vascular Cerebral (AVC)",
+      "variacoes_br": [
+        "derrame", 
+        "avc", 
+        "avci", 
+        "avch", 
+        "trombose na cabeça", 
+        "sangramento na cabeça",
+        "isquemia cerebral"
+      ]
+    },
+    {
+      "ancora_destino": "004.001.",
+      "termo_padrao": "Infarto Agudo do Miocárdio (IAM)",
+      "variacoes_br": [
+        "ataque cardíaco", 
+        "iam", 
+        "infarto", 
+        "enfarto", 
+        "princípio de infarto", 
+        "angina",
+        "dor no peito irradiada"
+      ]
+    },
+    {
+      "ancora_destino": "002.001.",
+      "termo_padrao": "Dispneia",
+      "variacoes_br": [
+        "falta de ar", 
+        "fôlego curto", 
+        "cansaço para respirar", 
+        "peito chiando", 
+        "puxando o ar",
+        "asma atacada"
+      ]
+    },
+    {
+      "ancora_destino": "003.001.",
+      "termo_padrao": "Hipertensão Arterial Sistêmica",
+      "variacoes_br": [
+        "pressão alta", 
+        "pico hipertensivo", 
+        "pressão subiu", 
+        "has",
+        "pa alta"
+      ]
+    },
+    {
+      "ancora_destino": "002.001.",
+      "termo_padrao": "Cefaleia",
+      "variacoes_br": [
+        "dor de cabeça", 
+        "cabeça latejando", 
+        "enxaqueca", 
+        "cabeça pesada",
+        "pontada na cabeça"
+      ]
+    },
+    {
+      "ancora_destino": "002.001.",
+      "termo_padrao": "Síncope",
+      "variacoes_br": [
+        "desmaio", 
+        "apagão", 
+        "perdeu os sentidos", 
+        "caiu duro",
+        "teto preto",
+        "lipotimia"
+      ]
+    }
+  ]
+}
