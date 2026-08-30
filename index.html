@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSI Explorer - Motor de Validação</title>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; background-color: #1e1e1e; color: #ffffff; padding: 20px; display: flex; justify-content: center; }
+        .container { background: #252526; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; max-width: 600px; border: 1px solid #333; }
+        h2 { margin-top: 0; color: #61afef; font-size: 1.5rem; }
+        .status-bar { font-size: 0.85rem; color: #98c379; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+        .dot { width: 10px; height: 10px; background: #e5c07b; border-radius: 50%; display: inline-block; }
+        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        input { flex: 1; padding: 12px; border-radius: 6px; border: 1px solid #3e3e42; background: #1e1e1e; color: #fff; font-size: 1rem; }
+        input:focus { outline: none; border-color: #61afef; }
+        button { padding: 12px 20px; background: #61afef; color: #1e1e1e; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        button:hover { background: #5294c9; }
+        button:disabled, input:disabled { opacity: 0.5; cursor: not-allowed; }
+        .console { background: #000; padding: 15px; border-radius: 6px; font-family: monospace; color: #abb2bf; min-height: 100px; white-space: pre-wrap; font-size: 0.9rem; border: 1px solid #3e3e42;}
+        .match { color: #98c379; font-weight: bold; }
+        .ancora { color: #e5c07b; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>CSI Motor Explorer 🔍</h2>
+        <div class="status-bar">
+            <span class="dot" id="led"></span>
+            <span id="status-text">Conectando à Nuvem (GitHub)...</span>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="termoInput" placeholder="Digite um termo. Ex: fever, espinha caída, avc..." disabled>
+            <button id="btnBuscar" disabled onclick="realizarBusca()">Traduzir</button>
+        </div>
+
+        <div class="console" id="terminal">Aguardando entrada de dados...</div>
+    </div>
+
+    <script>
+        // URLs do seu repositório no GitHub
+        const URL_CORE = "https://raw.githubusercontent.com/instituto-delyone/CSI-/main/data/csi_core.json";
+        const URL_SINTOMAS = "https://raw.githubusercontent.com/instituto-delyone/CSI-/main/data/csi_sintomas.json";
+
+        let bancoDeDados = [];
+
+        // 1. Inicia o motor conectando na nuvem
+        async function bootEngine() {
+            try {
+                const [resCore, resSintomas] = await Promise.all([ fetch(URL_CORE), fetch(URL_SINTOMAS) ]);
+                
+                const core = await resCore.json();
+                const sintomas = await resSintomas.json();
+
+                // Junta tudo num cérebro só para facilitar a busca
+                if(core.dicionario_canonico) bancoDeDados = bancoDeDados.concat(core.dicionario_canonico);
+                if(sintomas.coluna_central_semiologia) bancoDeDados = bancoDeDados.concat(sintomas.coluna_central_semiologia);
+
+                // Libera a interface
+                document.getElementById('led').style.background = "#98c379";
+                document.getElementById('status-text').innerText = "CSI Cloud Engine Conectado e Operante!";
+                document.getElementById('termoInput').disabled = false;
+                document.getElementById('btnBuscar').disabled = false;
+                escreverConsole("Base de dados carregada com sucesso. Pode pesquisar!");
+
+            } catch (error) {
+                document.getElementById('led').style.background = "#e06c75";
+                document.getElementById('status-text').innerText = "Falha na conexão com o GitHub.";
+                escreverConsole("ERRO: Não foi possível baixar os dados. Verifique sua internet ou o link do repositório.");
+            }
+        }
+
+        // 2. A lógica da máquina
+        function realizarBusca() {
+            const input = document.getElementById('termoInput').value.toLowerCase().trim();
+            if(!input) return;
+
+            escreverConsole(`Analisando o input: "${input}"...`);
+
+            let encontrou = false;
+
+            for (const bloco of bancoDeDados) {
+                // Junta todos os termos possíveis desse bloco em uma lista plana para checar
+                let todosOsTermos = [];
+                
+                if (bloco.termos_compartilhados) todosOsTermos.push(...bloco.termos_compartilhados.map(t => t.toLowerCase()));
+                if (bloco.termos_populares) todosOsTermos.push(...bloco.termos_populares.map(t => t.toLowerCase()));
+                
+                if (bloco.idiomas) {
+                    for (const lang in bloco.idiomas) {
+                        todosOsTermos.push(...bloco.idiomas[lang].map(t => t.toLowerCase()));
+                    }
+                }
+
+                // Se a palavra que digitamos estiver na lista...
+                if (todosOsTermos.includes(input)) {
+                    encontrou = true;
+                    const msg = `\n[Mapeamento Encontrado]\n<span class="match">Nome Canônico:</span> ${bloco.nome_canonico}\n<span class="ancora">Âncora de Destino:</span> [${bloco.codigo_ancora}]`;
+                    escreverConsole(msg, true);
+                    break;
+                }
+            }
+
+            if (!encontrou) {
+                escreverConsole(`\nO termo "${input}" não possui mapeamento no dicionário atual. Você precisa adicioná-lo ao JSON.`, true);
+            }
+        }
+
+        // Função auxiliar para imprimir na telinha preta
+        function escreverConsole(texto, append = false) {
+            const terminal = document.getElementById('terminal');
+            if(append) { terminal.innerHTML += texto; } 
+            else { terminal.innerHTML = texto; }
+        }
+
+        // Acorda a máquina assim que abrir o arquivo
+        window.onload = bootEngine;
+    </script>
+</body>
+</html>
