@@ -1,0 +1,60 @@
+{
+  "__INSTRUCOES_DE_LEITURA__": {
+    "objetivo": "Agregacao semantica de termos semiologicos e sinais clinicos independentemente do idioma ou regionalismo.",
+    "diretriz": "A maquina deve ler as entradas nas matrizes de idioma (PT, EN, ES) e regionalismos (POPULAR) e convergir o significado para o 'codigo_ancora'.",
+    "arquiteto": "Primeiro Meta-Engenheiro da Linguagem"
+  },
+  
+  "coluna_central_semiologia": [
+    {
+      "codigo_ancora": "SYM.001",
+      "nome_canonico": "Pirexia / Estado Febril",
+      "idiomas": {
+        "PT_BR": ["febre", "febrícula", "hipertermia"],
+        "EN": ["fever", "high temperature", "pyrexia"],
+        "ES": ["fiebre", "calentura", "hipertermia"]
+      },
+      "termos_populares": ["corpo quente", "quentura", "queimando de febre", "feverish"]
+    },
+    {
+      "codigo_ancora": "SYM.002",
+      "nome_canonico": "Cefaleia",
+      "idiomas": {
+        "PT_BR": ["cefaleia", "dor cefálica"],
+        "EN": ["headache", "head pain", "cephalalgia"],
+        "ES": ["cefalea", "dolor de cabeza"]
+      },
+      "termos_populares": ["dor de cabeça", "cabeça latejando", "cabeça pesada", "enxaqueca"]
+    },
+    {
+      "codigo_ancora": "SYM.003",
+      "nome_canonico": "Dispneia",
+      "idiomas": {
+        "PT_BR": ["dispneia", "desconforto respiratório"],
+        "EN": ["dyspnea", "shortness of breath", "breathlessness"],
+        "ES": ["disnea", "dificultad para respirar", "falta de aire"]
+      },
+      "termos_populares": ["falta de ar", "fôlego curto", "puxando o ar", "peito chiando", "cansaço pra respirar"]
+    },
+    {
+      "codigo_ancora": "SYM.004",
+      "nome_canonico": "Emese / Náusea",
+      "idiomas": {
+        "PT_BR": ["vômito", "êmese", "náusea"],
+        "EN": ["vomiting", "nausea", "emesis", "throwing up"],
+        "ES": ["vómito", "náusea", "emesis"]
+      },
+      "termos_populares": ["enjoo", "ansia de vômito", "chamando o hugo", "botando pra fora", "feeling sick"]
+    },
+    {
+      "codigo_ancora": "SYM.005",
+      "nome_canonico": "Mialgia",
+      "idiomas": {
+        "PT_BR": ["mialgia", "dor muscular"],
+        "EN": ["myalgia", "muscle pain", "muscle ache"],
+        "ES": ["mialgia", "dolor muscular"]
+      },
+      "termos_populares": ["dor no corpo", "corpo moído", "corpo dolorido", "dor nas juntas", "body aches"]
+    }
+  ]
+}
