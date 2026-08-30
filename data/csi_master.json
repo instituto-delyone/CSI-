@@ -1,1 +1,70 @@
-placeholder
+{
+  "__INSTRUCOES_PARA_A_MAQUINA_DE_LEITURA__": {
+    "objetivo_do_arquivo": "Ler este documento para criar o campo de contexto da aplicacao e ancorar o processamento de linguagem natural.",
+    "diretriz_de_processamento": "Identificar nomes e terminologias (com foco em semiologia) que compartilham um significado comum. Redirecionar qualquer variacao encontrada em 'termos_compartilhados' para a ancora imutavel definida em 'codigo_ancora'.",
+    "regra_de_leitura": "A ordem dos blocos (index) nao importa. A leitura deve extrair o contexto isolado de cada bloco.",
+    "arquiteto_do_sistema": "Primeiro Meta-Engenheiro da Linguagem"
+  },
+  "dicionario_canonico": [
+    {
+      "codigo_ancora": "000.001.",
+      "nome_canonico": "Nome Civil ou Social",
+      "descricao": "Identificador nominal ou social do paciente.",
+      "termos_compartilhados": ["nome", "nome do paciente", "name", "nombre", "paciente"]
+    },
+    {
+      "codigo_ancora": "000.002.",
+      "nome_canonico": "Idade Cronológica e Nascimento",
+      "descricao": "Idade em anos, meses ou dias e data de nascimento.",
+      "termos_compartilhados": ["idade", "age", "data de nascimento", "nascimento", "dn"]
+    },
+    {
+      "codigo_ancora": "002.001.",
+      "nome_canonico": "Queixa Principal (QP)",
+      "descricao": "Sintoma cardinal ou motivo imediato da busca por assistência.",
+      "termos_compartilhados": ["qp", "qpp", "queixa", "motivo da consulta", "chief complaint"]
+    },
+    {
+      "codigo_ancora": "002.002.",
+      "nome_canonico": "História da Doença Atual (HDA)",
+      "descricao": "Evolução cronológica e caracterização dos sintomas (Vigneta clínica).",
+      "termos_compartilhados": ["hda", "história", "histórico", "history of present illness", "relato da doença"]
+    },
+    {
+      "codigo_ancora": "003.001.",
+      "nome_canonico": "Sinais Vitais",
+      "descricao": "Parâmetros hemodinâmicos e ventilatórios.",
+      "termos_compartilhados": ["sv", "sinais vitais", "vital signs", "pressão arterial", "frequência cardíaca", "temperatura"]
+    },
+    {
+      "codigo_ancora": "003.000.",
+      "nome_canonico": "Exame Físico Geral e Segmentar",
+      "descricao": "Avaliação ectoscópica e propedêutica armada.",
+      "termos_compartilhados": ["exame físico", "ef", "physical exam", "exame clínico", "ausculta", "ectoscopia"]
+    },
+    {
+      "codigo_ancora": "004.001.",
+      "nome_canonico": "Diagnóstico Nosológico Principal",
+      "descricao": "Entidade patológica definida e classificação internacional.",
+      "termos_compartilhados": ["hipótese diagnóstica", "diagnóstico", "hd", "diagnosis", "cid", "cid-10"]
+    },
+    {
+      "codigo_ancora": "005.000.",
+      "nome_canonico": "Investigação Complementar Solicitada",
+      "descricao": "Conjunto de exames subsidiários solicitados.",
+      "termos_compartilhados": ["exames solicitados", "pedidos de exames", "labs", "laboratoriais", "imagem"]
+    },
+    {
+      "codigo_ancora": "006.000.",
+      "nome_canonico": "Plano Terapêutico e Evolução Diária",
+      "descricao": "Estratégia clínica global de intervenção e observações.",
+      "termos_compartilhados": ["conduta", "plano", "therapeutic plan", "tratamento", "evolução", "observações"]
+    },
+    {
+      "codigo_ancora": "006.002.",
+      "nome_canonico": "Terapia Farmacológica Específica",
+      "descricao": "Prescrição direcionada (antimicrobianos, antídotos, broncodilatadores).",
+      "termos_compartilhados": ["prescrição", "medicamentos", "receita", "fármacos", "terapia"]
+    }
+  ]
+}
