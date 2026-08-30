@@ -2,7 +2,7 @@
  * ==========================================
  * CSI FETCH ENGINE - O CABO DE CONEXÃO
  * Motor de busca e injeção do dicionário canônico
- * Arquitetura: Primeiro Meta-Engenheiro da Linguagem
+ * Arquitetura: delyone de paula canedo filho
  * ==========================================
  */
 
