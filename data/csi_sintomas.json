@@ -55,6 +55,56 @@
         "ES": ["mialgia", "dolor muscular"]
       },
       "termos_populares": ["dor no corpo", "corpo moído", "corpo dolorido", "dor nas juntas", "body aches"]
+    },
+    {
+      "codigo_ancora": "SYM.006",
+      "nome_canonico": "Dor Torácica",
+      "idiomas": {
+        "PT_BR": ["dor torácica", "precordialgia", "angina"],
+        "EN": ["chest pain", "chest tightness", "angina"],
+        "ES": ["dolor torácico", "dolor de pecho", "angina"]
+      },
+      "termos_populares": ["dor no peito", "aperto no peito", "coração doendo", "peso no peito", "pontada no coração"]
+    },
+    {
+      "codigo_ancora": "SYM.007",
+      "nome_canonico": "Dor Abdominal",
+      "idiomas": {
+        "PT_BR": ["dor abdominal", "abdome agudo"],
+        "EN": ["abdominal pain", "belly ache", "stomach pain"],
+        "ES": ["dolor abdominal", "dolor de barriga"]
+      },
+      "termos_populares": ["dor na barriga", "cólica forte", "pontada na barriga", "estômago embrulhado", "dor no pé da barriga"]
+    },
+    {
+      "codigo_ancora": "SYM.008",
+      "nome_canonico": "Diarreia",
+      "idiomas": {
+        "PT_BR": ["diarreia", "evacuação líquida", "disenteria"],
+        "EN": ["diarrhea", "loose stools", "bowel urgency"],
+        "ES": ["diarrea", "heces sueltas"]
+      },
+      "termos_populares": ["caganeira", "soltura", "desarranjo", "virose", "piriri", "intestino solto"]
+    },
+    {
+      "codigo_ancora": "SYM.009",
+      "nome_canonico": "Vertigem / Tontura",
+      "idiomas": {
+        "PT_BR": ["vertigem", "tontura", "instabilidade postural"],
+        "EN": ["dizziness", "vertigo", "lightheadedness"],
+        "ES": ["vértigo", "mareo"]
+      },
+      "termos_populares": ["mundo girando", "zonzeira", "cabeça oca", "labirintite atacada", "visão escura"]
+    },
+    {
+      "codigo_ancora": "SYM.010",
+      "nome_canonico": "Tosse",
+      "idiomas": {
+        "PT_BR": ["tosse", "tosse produtiva", "tosse seca"],
+        "EN": ["cough", "coughing"],
+        "ES": ["tos"]
+      },
+      "termos_populares": ["tossida", "pigarro", "garganta arranhando", "catarro no peito", "tosse de cachorro"]
     }
   ]
 }
