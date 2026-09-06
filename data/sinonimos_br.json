@@ -45,6 +45,42 @@
       ]
     },
     {
+      "ancora_destino": "004.001.",
+      "termo_padrao": "Diabetes Mellitus",
+      "variacoes_br": [
+        "diabete", 
+        "açúcar no sangue", 
+        "glicose alta", 
+        "açúcar alto", 
+        "dm",
+        "diabete atacada"
+      ]
+    },
+    {
+      "ancora_destino": "004.001.",
+      "termo_padrao": "Epilepsia / Crise Convulsiva",
+      "variacoes_br": [
+        "ataque", 
+        "convulsão", 
+        "tremedeira", 
+        "passou mal", 
+        "se debatendo",
+        "epilepsia"
+      ]
+    },
+    {
+      "ancora_destino": "004.001.",
+      "termo_padrao": "Transtorno de Ansiedade / Ataque de Pânico",
+      "variacoes_br": [
+        "nervoso", 
+        "ataque de nervos", 
+        "batedeira no peito", 
+        "síndrome do pânico", 
+        "ansiedade atacada",
+        "crise de choro"
+      ]
+    },
+    {
       "ancora_destino": "002.001.",
       "termo_padrao": "Dispneia",
       "variacoes_br": [
@@ -88,6 +124,29 @@
         "caiu duro",
         "teto preto",
         "lipotimia"
+      ]
+    },
+    {
+      "ancora_destino": "002.001.",
+      "termo_padrao": "Disúria / Infecção do Trato Urinário",
+      "variacoes_br": [
+        "ardência para urinar", 
+        "urina com sangue", 
+        "mijo ardendo", 
+        "dor no pé da barriga",
+        "infecção de urina",
+        "cistite"
+      ]
+    },
+    {
+      "ancora_destino": "002.001.",
+      "termo_padrao": "Edema Periférico",
+      "variacoes_br": [
+        "inchaço", 
+        "perna inchada", 
+        "retendo líquido", 
+        "pé inchado",
+        "corpo retido"
       ]
     }
   ]
