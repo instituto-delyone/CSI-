@@ -31,6 +31,30 @@
       "termos_compartilhados": ["hda", "história", "histórico", "history of present illness", "relato da doença"]
     },
     {
+      "codigo_ancora": "002.003.",
+      "nome_canonico": "História Patológica Pregressa (HPP)",
+      "descricao": "Comorbidades, cirurgias prévias e internações passadas.",
+      "termos_compartilhados": ["hpp", "antecedentes pessoais", "comorbidades", "doenças prévias", "past medical history"]
+    },
+    {
+      "codigo_ancora": "002.004.",
+      "nome_canonico": "História Familiar (HF)",
+      "descricao": "Doenças hereditárias e histórico de saúde dos parentes de primeiro grau.",
+      "termos_compartilhados": ["hf", "antecedentes familiares", "histórico familiar", "family history"]
+    },
+    {
+      "codigo_ancora": "002.005.",
+      "nome_canonico": "História Social e Hábitos de Vida (HS)",
+      "descricao": "Ocupação, etilismo, tabagismo, uso de drogas ilícitas e moradia.",
+      "termos_compartilhados": ["hs", "hábitos de vida", "tabagismo", "etilismo", "história social", "social history"]
+    },
+    {
+      "codigo_ancora": "002.006.",
+      "nome_canonico": "Alergias e Reações Adversas",
+      "descricao": "Histórico de anafilaxia ou hipersensibilidade a fármacos/alimentos.",
+      "termos_compartilhados": ["alergias", "reação alérgica", "alérgico", "allergies", "hipersensibilidade"]
+    },
+    {
       "codigo_ancora": "003.001.",
       "nome_canonico": "Sinais Vitais",
       "descricao": "Parâmetros hemodinâmicos e ventilatórios.",
