@@ -48,7 +48,10 @@
         const URL_SINTOMAS = "https://raw.githubusercontent.com/instituto-delyone/CSI-/main/data/csi_sintomas.json";
 
         // Opcional: preencher futuramente com o e-mail registrado no NCBI.
-        window.CSI_CONFIG = window.CSI_CONFIG || { ncbiEmail: "" };
+        window.CSI_CONFIG = window.CSI_CONFIG || {
+            ncbiEmail: "",
+            UMLS_API_BASE: "https://diagnosys-umls-proxy.dr-delyone.workers.dev/api/umls"
+        };
 
         let bancoDeDados = [];
 
@@ -90,35 +93,78 @@
 
             if (exact) {
                 escreverConsole(
-                    `\n[Mapeamento Encontrado]\n<span class="match">Nome Canônico:</span> ${exact.canonicalName}\n<span class="ancora">Âncora de Destino:</span> [${exact.anchor}]`,
+                    `\\n[CSI — mapeamento local]\\n<span class="match">Nome Canônico:</span> ${exact.canonicalName}\\n<span class="ancora">Âncora:</span> [${exact.anchor}]`,
                     true
                 );
                 return;
             }
 
             escreverConsole(
-                `\n[CSI] Termo ausente no dicionário local.\n<span class="research">Consultando NCBI / PubMed...</span>`,
+                `\\n[CSI] Termo ausente no dicionário local.\\n<span class="research">Consultando UMLS...</span>`,
                 true
             );
 
             try {
-                const research = await CSINCbi.searchPubMed(input, { retmax: 5 });
+                const umls = await CSIUMLS.search(input, { pageSize: 10 });
+                const primary = umls.results[0] || null;
 
-                if (!research.results.length) {
-                    escreverConsole("\nNCBI não retornou resultados suficientes para gerar proposta.", true);
+                if (!primary) {
+                    escreverConsole(
+                        `\\n[UMLS] Nenhum conceito candidato encontrado.\\n<span class="research">Consultando PubMed como fonte complementar...</span>`,
+                        true
+                    );
+                } else {
+                    const candidate = CSIEngine.findCanonicalCandidate(primary, bancoDeDados);
+
+                    escreverConsole(
+                        `\\n[UMLS — conceito encontrado]\\n<span class="match">CUI:</span> ${primary.cui || "—"}\\n<span class="match">Conceito:</span> ${primary.name || "—"}\\n<span class="ancora">Correspondência CSI:</span> ${candidate ? candidate.canonicalName + " [" + candidate.anchor + "]" : "nenhuma âncora existente"}`,
+                        true
+                    );
+
+                    let research = null;
+                    try {
+                        research = await CSINCbi.searchPubMed(
+                            primary.name || input,
+                            { retmax: 5 }
+                        );
+                    } catch (_) {
+                        research = null;
+                    }
+
+                    const proposal = CSIEngine.buildProposal(input, {
+                        umlsQuery: input,
+                        umlsResult: primary,
+                        canonicalCandidate: candidate,
+                        research
+                    });
+
+                    CSIEngine.queueProposal(proposal);
+
+                    escreverConsole(
+                        `\\n[Proposta de Expansão]\\n<span class="pending">Código:</span> ${proposal.codigo_provisorio}\\n<span class="pending">Tipo:</span> ${proposal.tipo}\\n<span class="pending">Status:</span> pending_review\\n<span class="research">PubMed:</span> ${proposal.evidencias.length} evidências\\n\\nA UMLS identificou o conceito. A entrada ainda NÃO foi promovida automaticamente ao dicionário.`,
+                        true
+                    );
                     return;
                 }
 
-                const proposal = CSIEngine.buildProposal(input, research);
+                // Se a UMLS não encontrou conceito, PubMed permanece como descoberta secundária.
+                const research = await CSINCbi.searchPubMed(input, { retmax: 5 });
+
+                if (!research.results.length) {
+                    escreverConsole("\\nNenhuma evidência suficiente para gerar proposta.", true);
+                    return;
+                }
+
+                const proposal = CSIEngine.buildProposal(input, { research });
                 CSIEngine.queueProposal(proposal);
 
                 escreverConsole(
-                    `\n[Proposta de Expansão Gerada]\n<span class="pending">Código provisório:</span> ${proposal.codigo_provisorio}\n<span class="pending">Status:</span> pending_review\n<span class="research">Evidências PubMed:</span> ${proposal.evidencias.length}\n\nA entrada foi colocada na fila local. Ela ainda NÃO foi promovida ao dicionário canônico.`,
+                    `\\n[Proposta bibliográfica]\\n<span class="pending">Código:</span> ${proposal.codigo_provisorio}\\n<span class="pending">Status:</span> pending_review\\n<span class="research">PubMed:</span> ${proposal.evidencias.length} evidências\\n\\nSem conceito UMLS, esta proposta é apenas bibliográfica e exige revisão semântica.`,
                     true
                 );
             } catch (error) {
                 escreverConsole(
-                    `\n[NCBI indisponível]\nNão foi possível consultar a fonte externa neste navegador.\nDetalhe: ${error.message}\n\nA próxima etapa será usar um proxy/worker seguro para a consulta externa.`,
+                    `\\n[Serviço externo indisponível]\\nNão foi possível concluir a resolução UMLS/PubMed.\\nDetalhe: ${error.message}`,
                     true
                 );
             }
@@ -145,6 +191,7 @@
     </script>
 
     <script src="docs/Js/csi-engine.js"></script>
+    <script src="docs/Js/csi-umls.js"></script>
     <script src="docs/Js/csi-ncbi.js"></script>
 </body>
 </html>
