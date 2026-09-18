@@ -1,0 +1,81 @@
+name: CSI Expansion
+
+on:
+  repository_dispatch:
+    types: [csi-expansion-approved]
+  workflow_dispatch:
+    inputs:
+      proposal_json:
+        description: "JSON de uma proposta aprovada pelo CSI"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  apply-expansion:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare proposal
+        env:
+          PAYLOAD: ${{ inputs.proposal_json || toJson(github.event.client_payload.proposal) }}
+        run: |
+          printf '%s' "$PAYLOAD" > /tmp/proposal.json
+          python - <<'PY'
+          import json
+          p = json.load(open("/tmp/proposal.json", encoding="utf-8"))
+          required = ["termo_original", "codigo_provisorio", "nome_canonico_provisorio", "status"]
+          missing = [k for k in required if not p.get(k)]
+          if missing:
+              raise SystemExit("Proposta inválida; faltando: " + ", ".join(missing))
+          if p["status"] != "approved":
+              raise SystemExit("Apenas propostas com status=approved podem ser aplicadas.")
+          PY
+
+      - name: Apply to canonical symptom dictionary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          proposal = json.load(open("/tmp/proposal.json", encoding="utf-8"))
+          path = Path("data/csi_sintomas.json")
+          data = json.loads(path.read_text(encoding="utf-8"))
+
+          items = data.setdefault("coluna_central_semiologia", [])
+          code = proposal["codigo_provisorio"]
+          term = proposal["termo_original"]
+          canonical = proposal["nome_canonico_provisorio"]
+
+          if any(item.get("codigo_ancora") == code for item in items):
+              raise SystemExit("Código já existe: " + code)
+
+          items.append({
+              "codigo_ancora": code,
+              "nome_canonico": canonical,
+              "idiomas": {"PT_BR": [term]},
+              "termos_populares": [],
+              "metadados_expansao": {
+                  "status": "approved",
+                  "source_provider": proposal.get("origem", {}).get("provider"),
+                  "evidencias": proposal.get("evidencias", [])
+              }
+          })
+
+          path.write_text(
+              json.dumps(data, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8"
+          )
+          PY
+
+      - name: Commit expansion
+        run: |
+          git config user.name "CSI Expansion Bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/csi_sintomas.json
+          git commit -m "feat(csi): apply approved semantic expansion"
+          git push
