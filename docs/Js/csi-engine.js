@@ -79,26 +79,56 @@
     return proposal;
   }
 
-  function buildProposal(term, research) {
+  function findCanonicalCandidate(umlsResult, database) {
+    if (!umlsResult) return null;
+    const target = normalize(umlsResult.name);
+    if (!target) return null;
+
+    for (const bloco of allBlocks(database)) {
+      const terms = [bloco.nome_canonico, ...flattenTerms(bloco)].map(normalize);
+      if (terms.includes(target)) {
+        return {
+          anchor: bloco.codigo_ancora,
+          canonicalName: bloco.nome_canonico,
+          reason: "exact_name_or_existing_term"
+        };
+      }
+    }
+    return null;
+  }
+
+  function makeConceptCode(umlsResult, term) {
+    if (umlsResult?.cui) return "AUTO." + String(umlsResult.cui).toUpperCase();
+    return makeProvisionalCode(term);
+  }
+
+  function buildProposal(term, context = {}) {
     const now = new Date().toISOString();
+    const umlsResult = context.umlsResult || null;
+    const candidate = context.canonicalCandidate || null;
+    const research = context.research || null;
+
     return {
       proposal_id: "EXP-" + now.replace(/[-:.TZ]/g, "").slice(0, 14) + "-" + makeProvisionalCode(term).slice(-8),
       termo_original: String(term).trim(),
-      codigo_provisorio: makeProvisionalCode(term),
-      nome_canonico_provisorio: String(term).trim(),
-      tipo: "candidate_semantic_unit",
+      codigo_provisorio: candidate?.anchor || makeConceptCode(umlsResult, term),
+      nome_canonico_provisorio: candidate?.canonicalName || umlsResult?.name || String(term).trim(),
+      tipo: candidate ? "synonym_for_existing_anchor" : "candidate_semantic_unit",
       status: "pending_review",
       origem: {
-        provider: "NCBI_PubMed",
+        provider: "UMLS",
         queried_at: now,
-        query: research.query
+        query: context.umlsQuery || term,
+        cui: umlsResult?.cui || null,
+        rootSource: umlsResult?.rootSource || null
       },
-      evidencias: (research.results || []).slice(0, 5).map(item => ({
+      correspondencia_csi: candidate || null,
+      evidencias: (research?.results || []).slice(0, 5).map(item => ({
         pmid: item.pmid,
         title: item.title,
         url: "https://pubmed.ncbi.nlm.nih.gov/" + item.pmid + "/"
       })),
-      regra: "O código AUTO é provisório. A entrada não deve ser promovida ao dicionário canônico sem revisão semântica."
+      regra: "UMLS identifica conceitos e candidatos. A promoção para uma âncora existente ou a criação de uma nova âncora exige revisão semântica."
     };
   }
 
