@@ -28,6 +28,14 @@ CSI exact match
      dicionário canônico
 ```
 
+## Papel da UMLS
+
+A UMLS é a primeira camada externa de resolução semântica. O CSI consulta o proxy seguro já utilizado pelo Diagnosys e recebe candidatos de conceito, incluindo CUI e nome do conceito.
+
+A UMLS ajuda a estabilizar o conceito biomédico, mas não decide sozinha que um termo deve ser sinônimo de uma âncora CSI.
+
+O PubMed permanece como camada complementar de evidência bibliográfica.
+
 ## Por que o código AUTO é provisório?
 
 Uma busca bibliográfica demonstra que um termo aparece na literatura; ela não demonstra, sozinha, que o termo deve ser fundido a uma âncora semântica existente.
@@ -38,7 +46,7 @@ Por isso o CSI separa:
 - **candidato semântico**;
 - **âncora canônica**.
 
-O código `AUTO.XXXXXXXX` identifica o candidato de maneira determinística, mas não é uma âncora clínica oficial.
+Quando a UMLS fornece um CUI, o candidato usa `AUTO.<CUI>` como identificador provisório determinístico. Se houver correspondência clara com uma âncora já existente, a proposta aponta para a âncora em vez de criar outra. O código AUTO não é uma âncora clínica oficial.
 
 ## Integração futura com GitHub
 
