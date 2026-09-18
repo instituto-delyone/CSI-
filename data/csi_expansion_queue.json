@@ -1,0 +1,5 @@
+{
+  "version": "1.0.0",
+  "description": "Fila de propostas semânticas geradas pelo CSI. Entradas permanecem pendentes até revisão.",
+  "proposals": []
+}
