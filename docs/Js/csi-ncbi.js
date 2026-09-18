@@ -7,7 +7,7 @@
 
   const BASE = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils";
   const TOOL = "CSI-Motor-Explorer";
-  const EMAIL = "delyone@instituto-delyone.org";
+  const EMAIL = global.CSI_CONFIG?.ncbiEmail || "";
 
   function makeUrl(endpoint, params) {
     const url = new URL(BASE + "/" + endpoint);
