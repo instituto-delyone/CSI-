@@ -135,6 +135,7 @@
   global.CSIEngine = {
     normalize,
     findExact,
+    findCanonicalCandidate,
     makeProvisionalCode,
     readQueue,
     queueProposal,
