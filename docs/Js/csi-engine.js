@@ -107,12 +107,21 @@
     const umlsResult = context.umlsResult || null;
     const candidate = context.canonicalCandidate || null;
     const research = context.research || null;
+    const umlsAtoms = Array.isArray(context.umlsAtoms) ? context.umlsAtoms : [];
+    const sinonimos = Array.from(new Set(
+      umlsAtoms
+        .map(atom => atom?.name || atom?.term || atom?.literal || null)
+        .filter(Boolean)
+        .map(value => String(value).trim())
+        .filter(value => normalize(value) !== normalize(term))
+    )).slice(0, 20);
 
     return {
       proposal_id: "EXP-" + now.replace(/[-:.TZ]/g, "").slice(0, 14) + "-" + makeProvisionalCode(term).slice(-8),
       termo_original: String(term).trim(),
       codigo_provisorio: candidate?.anchor || makeConceptCode(umlsResult, term),
       nome_canonico_provisorio: candidate?.canonicalName || umlsResult?.name || String(term).trim(),
+      sinonimos,
       tipo: candidate ? "synonym_for_existing_anchor" : "candidate_semantic_unit",
       status: "pending_review",
       origem: {
