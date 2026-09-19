@@ -198,7 +198,7 @@
 
             const endpoint = String(window.CSI_CONFIG?.NOTION_PROPOSAL_API || "").trim();
             if (!endpoint) {
-                escreverConsole("\n<span class="notion">Notion ainda não configurado:</span> defina CSI_CONFIG.NOTION_PROPOSAL_API com o endpoint do Worker seguro.", true);
+                escreverConsole("\n<span class=\"notion\">Notion ainda não configurado:</span> defina CSI_CONFIG.NOTION_PROPOSAL_API com o endpoint do Worker seguro.", true);
                 return;
             }
 
@@ -218,13 +218,13 @@
                 if (!response.ok) throw new Error(data.error || "Worker retornou HTTP " + response.status);
 
                 escreverConsole(
-                    "\n<span class="success">✓ Proposta gravada no Notion.</span>\n<span class="notion">ID:</span> " +
+                    "\n<span class=\"success\">✓ Proposta gravada no Notion.</span>\n<span class="notion">ID:</span> " +
                     (data.page_id || "—") +
-                    "\n<span class="pending">Status:</span> pending_review\n\nEla fica no CSI aguardando revisão/aceite; nada é promovido automaticamente.",
+                    "\n<span class=\"pending\">Status:</span> pending_review\n\nEla fica no CSI aguardando revisão/aceite; nada é promovido automaticamente.",
                     true
                 );
             } catch (error) {
-                escreverConsole("\n<span class="pending">Falha ao gravar no Notion.</span>\nDetalhe: " + error.message, true);
+                escreverConsole("\n<span class=\"pending\">Falha ao gravar no Notion.</span>\nDetalhe: " + error.message, true);
             } finally {
                 button.disabled = false;
                 button.innerText = oldLabel;
