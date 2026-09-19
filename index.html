@@ -22,6 +22,9 @@
         .ancora { color: #e5c07b; }
         .research { color: #61afef; }
         .pending { color: #e5c07b; }
+        .notion { color: #c678dd; }
+        .success { color: #98c379; }
+        .proposal-actions { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
     </style>
 </head>
 <body>
@@ -39,7 +42,10 @@
         </div>
 
         <div class="console" id="terminal">Aguardando entrada de dados...</div>
-        <button class="secondary" id="btnExportar" onclick="exportarFila()" disabled>Exportar propostas pendentes</button>
+        <div class="proposal-actions">
+            <button class="secondary" id="btnEnviarNotion" onclick="enviarPropostaAoNotion()" disabled>🧬 Enviar proposta ao CSI / Notion</button>
+            <button class="secondary" id="btnExportar" onclick="exportarFila()" disabled>Exportar propostas pendentes</button>
+        </div>
     </div>
 
     <script>
@@ -50,10 +56,12 @@
         // Opcional: preencher futuramente com o e-mail registrado no NCBI.
         window.CSI_CONFIG = window.CSI_CONFIG || {
             ncbiEmail: "",
-            UMLS_API_BASE: "https://diagnosys-umls-proxy.dr-delyone.workers.dev/api/umls"
+            UMLS_API_BASE: "https://diagnosys-umls-proxy.dr-delyone.workers.dev/api/umls",
+            NOTION_PROPOSAL_API: ""
         };
 
         let bancoDeDados = [];
+        let ultimaProposta = null;
 
         async function bootEngine() {
             try {
@@ -75,6 +83,7 @@
                 document.getElementById('termoInput').disabled = false;
                 document.getElementById('btnBuscar').disabled = false;
                 document.getElementById('btnExportar').disabled = false;
+                document.getElementById('btnEnviarNotion').disabled = false;
                 escreverConsole("Base de dados carregada com sucesso. Pode pesquisar!");
             } catch (error) {
                 document.getElementById('led').style.background = "#e06c75";
@@ -107,6 +116,15 @@
             try {
                 const umls = await CSIUMLS.search(input, { pageSize: 10 });
                 const primary = umls.results[0] || null;
+                let umlsAtoms = [];
+                if (primary?.cui) {
+                    try {
+                        const atomData = await CSIUMLS.getAtoms(primary.cui, { pageSize: 30 });
+                        umlsAtoms = atomData.atoms || [];
+                    } catch (_) {
+                        umlsAtoms = [];
+                    }
+                }
 
                 if (!primary) {
                     escreverConsole(
@@ -134,11 +152,12 @@
                     const proposal = CSIEngine.buildProposal(input, {
                         umlsQuery: input,
                         umlsResult: primary,
+                        umlsAtoms,
                         canonicalCandidate: candidate,
                         research
                     });
 
-                    CSIEngine.queueProposal(proposal);
+                    ultimaProposta = CSIEngine.queueProposal(proposal);
 
                     escreverConsole(
                         `\\n[Proposta de Expansão]\\n<span class="pending">Código:</span> ${proposal.codigo_provisorio}\\n<span class="pending">Tipo:</span> ${proposal.tipo}\\n<span class="pending">Status:</span> pending_review\\n<span class="research">PubMed:</span> ${proposal.evidencias.length} evidências\\n\\nA UMLS identificou o conceito. A entrada ainda NÃO foi promovida automaticamente ao dicionário.`,
@@ -156,7 +175,7 @@
                 }
 
                 const proposal = CSIEngine.buildProposal(input, { research });
-                CSIEngine.queueProposal(proposal);
+                ultimaProposta = CSIEngine.queueProposal(proposal);
 
                 escreverConsole(
                     `\\n[Proposta bibliográfica]\\n<span class="pending">Código:</span> ${proposal.codigo_provisorio}\\n<span class="pending">Status:</span> pending_review\\n<span class="research">PubMed:</span> ${proposal.evidencias.length} evidências\\n\\nSem conceito UMLS, esta proposta é apenas bibliográfica e exige revisão semântica.`,
@@ -167,6 +186,48 @@
                     `\\n[Serviço externo indisponível]\\nNão foi possível concluir a resolução UMLS/PubMed.\\nDetalhe: ${error.message}`,
                     true
                 );
+            }
+        }
+
+
+        async function enviarPropostaAoNotion() {
+            if (!ultimaProposta) {
+                escreverConsole("\nPrimeiro faça uma busca que gere uma proposta pendente.", true);
+                return;
+            }
+
+            const endpoint = String(window.CSI_CONFIG?.NOTION_PROPOSAL_API || "").trim();
+            if (!endpoint) {
+                escreverConsole("\n<span class="notion">Notion ainda não configurado:</span> defina CSI_CONFIG.NOTION_PROPOSAL_API com o endpoint do Worker seguro.", true);
+                return;
+            }
+
+            const button = document.getElementById('btnEnviarNotion');
+            button.disabled = true;
+            const oldLabel = button.innerText;
+            button.innerText = "Enviando…";
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+                    body: JSON.stringify({ proposal: ultimaProposta })
+                });
+
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || "Worker retornou HTTP " + response.status);
+
+                escreverConsole(
+                    "\n<span class="success">✓ Proposta gravada no Notion.</span>\n<span class="notion">ID:</span> " +
+                    (data.page_id || "—") +
+                    "\n<span class="pending">Status:</span> pending_review\n\nEla fica no CSI aguardando revisão/aceite; nada é promovido automaticamente.",
+                    true
+                );
+            } catch (error) {
+                escreverConsole("\n<span class="pending">Falha ao gravar no Notion.</span>\nDetalhe: " + error.message, true);
+            } finally {
+                button.disabled = false;
+                button.innerText = oldLabel;
             }
         }
 
