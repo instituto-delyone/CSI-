@@ -37,7 +37,7 @@
         </div>
 
         <div class="input-group">
-            <input type="text" id="termoInput" placeholder="Digite um termo. Ex: fever, espinha caída, avc..." autocomplete="off" autocapitalize="sentences" spellcheck="true" disabled>
+            <input type="text" id="termoInput" placeholder="Digite um termo. Ex: fever, espinha caída, avc..." autocomplete="off" autocapitalize="sentences" spellcheck="true" >
             <button id="btnBuscar" disabled onclick="realizarBusca()">Traduzir</button>
         </div>
 
@@ -53,9 +53,9 @@
     <script src="docs/Js/csi-ncbi.js"></script>
 
     <script>
-        // Mantemos o banco no GitHub e o motor de expansão separado.
-        const URL_CORE = "https://raw.githubusercontent.com/instituto-delyone/CSI-/main/data/csi_master.json";
-        const URL_SINTOMAS = "https://raw.githubusercontent.com/instituto-delyone/CSI-/main/data/csi_sintomas.json";
+        // Mantemos o banco no próprio site para evitar falhas de CORS/rede do raw.githubusercontent.com.
+        const URL_CORE = "./data/csi_master.json";
+        const URL_SINTOMAS = "./data/csi_sintomas.json";
 
         // Opcional: preencher futuramente com o e-mail registrado no NCBI.
         window.CSI_CONFIG = window.CSI_CONFIG || {
@@ -66,6 +66,7 @@
 
         let bancoDeDados = [];
         let ultimaProposta = null;
+        let engineReady = false;
 
         async function bootEngine() {
             try {
@@ -84,6 +85,7 @@
 
                 document.getElementById('led').style.background = "#98c379";
                 document.getElementById('status-text').innerText = "CSI Cloud Engine Conectado e Operante!";
+                engineReady = true;
                 document.getElementById('termoInput').disabled = false;
                 document.getElementById('btnBuscar').disabled = false;
                 document.getElementById('btnExportar').disabled = false;
@@ -107,6 +109,10 @@
         async function realizarBusca() {
             const input = document.getElementById('termoInput').value.trim();
             if (!input) return;
+            if (!engineReady) {
+                escreverConsole("O motor ainda está carregando a biblioteca. Aguarde só um instante.");
+                return;
+            }
 
             escreverConsole("Analisando o input: \"" + escapeHtml(input) + "\"...");
 
