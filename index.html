@@ -24,7 +24,17 @@
         .pending { color: #e5c07b; }
         .notion { color: #c678dd; }
         .success { color: #98c379; }
-        .proposal-actions { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+.proposal-actions { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        .pending-action { margin-top: 12px; padding: 12px; border: 1px solid #e5c07b; border-radius: 8px; background: rgba(229,192,123,.08); display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+        .pending-action[hidden] { display:none; }
+        .catalog-panel { margin-top: 16px; border: 1px solid #3e3e42; border-radius: 8px; background:#1e1e1e; overflow:hidden; }
+        .catalog-panel summary { cursor:pointer; padding:14px; color:#61afef; font-weight:700; }
+        .catalog-note { padding:0 14px; color:#abb2bf; font-size:.85rem; }
+        .catalog-table-wrap { overflow:auto; max-height:520px; }
+        .catalog-table { width:100%; border-collapse:collapse; font-size:.82rem; }
+        .catalog-table th,.catalog-table td { padding:9px 10px; border-top:1px solid #333; text-align:left; vertical-align:top; }
+        .catalog-table th { position:sticky; top:0; background:#252526; color:#61afef; }
+        .catalog-table td:first-child { white-space:nowrap; color:#e5c07b; }
     </style>
 </head>
 <body>
@@ -42,6 +52,10 @@
         </div>
 
         <div class="console" id="terminal">Aguardando entrada de dados...</div>
+        <div id="pendingAction" class="pending-action" hidden><span id="pendingText">Termo sem associação.</span><button class="secondary" onclick="adicionarPendencia()">📌 Enviar para pendências</button></div>
+
+        <details class="catalog-panel"><summary>📚 Biblioteca do CSI — catálogo atual (24 entradas)</summary><p class="catalog-note">Âncora/código · nome canônico · nomes e expressões associados.</p><div class="catalog-table-wrap"><table class="catalog-table"><thead><tr><th>Código</th><th>Nome canônico</th><th>Nomes e expressões associados</th></tr></thead><tbody><tr><td><code>000.001.</code></td><td><strong>Nome Civil ou Social</strong></td><td>nome; nome do paciente; name; nombre; paciente</td></tr><tr><td><code>000.002.</code></td><td><strong>Idade Cronológica e Nascimento</strong></td><td>idade; age; data de nascimento; nascimento; dn</td></tr><tr><td><code>002.001.</code></td><td><strong>Queixa Principal (QP)</strong></td><td>qp; qpp; queixa; motivo da consulta; chief complaint</td></tr><tr><td><code>002.002.</code></td><td><strong>História da Doença Atual (HDA)</strong></td><td>hda; história; histórico; history of present illness; relato da doença</td></tr><tr><td><code>002.003.</code></td><td><strong>História Patológica Pregressa (HPP)</strong></td><td>hpp; antecedentes pessoais; comorbidades; doenças prévias; past medical history</td></tr><tr><td><code>002.004.</code></td><td><strong>História Familiar (HF)</strong></td><td>hf; antecedentes familiares; histórico familiar; family history</td></tr><tr><td><code>002.005.</code></td><td><strong>História Social e Hábitos de Vida (HS)</strong></td><td>hs; hábitos de vida; tabagismo; etilismo; história social; social history</td></tr><tr><td><code>002.006.</code></td><td><strong>Alergias e Reações Adversas</strong></td><td>alergias; reação alérgica; alérgico; allergies; hipersensibilidade</td></tr><tr><td><code>003.001.</code></td><td><strong>Sinais Vitais</strong></td><td>sv; sinais vitais; vital signs; pressão arterial; frequência cardíaca; temperatura</td></tr><tr><td><code>003.000.</code></td><td><strong>Exame Físico Geral e Segmentar</strong></td><td>exame físico; ef; physical exam; exame clínico; ausculta; ectoscopia</td></tr><tr><td><code>004.001.</code></td><td><strong>Diagnóstico Nosológico Principal</strong></td><td>hipótese diagnóstica; diagnóstico; hd; diagnosis; cid; cid-10</td></tr><tr><td><code>005.000.</code></td><td><strong>Investigação Complementar Solicitada</strong></td><td>exames solicitados; pedidos de exames; labs; laboratoriais; imagem</td></tr><tr><td><code>006.000.</code></td><td><strong>Plano Terapêutico e Evolução Diária</strong></td><td>conduta; plano; therapeutic plan; tratamento; evolução; observações</td></tr><tr><td><code>006.002.</code></td><td><strong>Terapia Farmacológica Específica</strong></td><td>prescrição; medicamentos; receita; fármacos; terapia</td></tr><tr><td><code>SYM.001</code></td><td><strong>Pirexia / Estado Febril</strong></td><td>corpo quente; quentura; queimando de febre; feverish; febre; febrícula; hipertermia; fever; high temperature; pyrexia; fiebre; calentura</td></tr><tr><td><code>SYM.002</code></td><td><strong>Cefaleia</strong></td><td>dor de cabeça; cabeça latejando; cabeça pesada; enxaqueca; cefaleia; dor cefálica; headache; head pain; cephalalgia; cefalea; dolor de cabeza</td></tr><tr><td><code>SYM.003</code></td><td><strong>Dispneia</strong></td><td>falta de ar; fôlego curto; puxando o ar; peito chiando; cansaço pra respirar; dispneia; desconforto respiratório; dyspnea; shortness of breath; breathlessness; disnea; dificultad para respirar; falta de aire</td></tr><tr><td><code>SYM.004</code></td><td><strong>Emese / Náusea</strong></td><td>enjoo; ansia de vômito; chamando o hugo; botando pra fora; feeling sick; vômito; êmese; náusea; vomiting; nausea; emesis; throwing up; vómito</td></tr><tr><td><code>SYM.005</code></td><td><strong>Mialgia</strong></td><td>dor no corpo; corpo moído; corpo dolorido; dor nas juntas; body aches; mialgia; dor muscular; myalgia; muscle pain; muscle ache; dolor muscular</td></tr><tr><td><code>SYM.006</code></td><td><strong>Dor Torácica</strong></td><td>dor no peito; aperto no peito; coração doendo; peso no peito; pontada no coração; dor torácica; precordialgia; angina; chest pain; chest tightness; dolor torácico; dolor de pecho</td></tr><tr><td><code>SYM.007</code></td><td><strong>Dor Abdominal</strong></td><td>dor na barriga; cólica forte; pontada na barriga; estômago embrulhado; dor no pé da barriga; dor abdominal; abdome agudo; abdominal pain; belly ache; stomach pain; dolor abdominal; dolor de barriga</td></tr><tr><td><code>SYM.008</code></td><td><strong>Diarreia</strong></td><td>caganeira; soltura; desarranjo; virose; piriri; intestino solto; diarreia; evacuação líquida; disenteria; diarrhea; loose stools; bowel urgency; diarrea; heces sueltas</td></tr><tr><td><code>SYM.009</code></td><td><strong>Vertigem / Tontura</strong></td><td>mundo girando; zonzeira; cabeça oca; labirintite atacada; visão escura; vertigem; tontura; instabilidade postural; dizziness; vertigo; lightheadedness; vértigo; mareo</td></tr><tr><td><code>SYM.010</code></td><td><strong>Tosse</strong></td><td>tossida; pigarro; garganta arranhando; catarro no peito; tosse de cachorro; tosse; tosse produtiva; tosse seca; cough; coughing; tos</td></tr></tbody></table></div></details>
+
         <div class="proposal-actions">
             <button class="secondary" id="btnEnviarNotion" onclick="enviarPropostaAoNotion()" disabled>🧬 Enviar proposta ao CSI / Notion</button>
             <button class="secondary" id="btnExportar" onclick="exportarFila()" disabled>Exportar propostas pendentes</button>
@@ -66,6 +80,7 @@
 
         let bancoDeDados = [];
         let ultimaProposta = null;
+        let ultimaPendencia = null;
         let engineReady = false;
 
         async function bootEngine() {
@@ -109,6 +124,8 @@
         async function realizarBusca() {
             const input = document.getElementById('termoInput').value.trim();
             if (!input) return;
+            ultimaPendencia = null;
+            document.getElementById('pendingAction').hidden = true;
             if (!engineReady) {
                 escreverConsole("A biblioteca ainda está carregando. Tente novamente em um instante.");
                 return;
@@ -247,6 +264,35 @@
                 button.disabled = false;
                 button.innerText = oldLabel;
             }
+        }
+
+        function mostrarPendencia(term, proposal) {
+            ultimaPendencia = { termo_original: term, proposta: proposal || null, criado_em: new Date().toISOString(), status: "pending_review" };
+            document.getElementById('pendingText').textContent = 'Sem associação canônica: ' + term;
+            document.getElementById('pendingAction').hidden = false;
+        }
+
+        function adicionarPendencia() {
+            if (!ultimaPendencia) return;
+            const key = "csi.pending.review.v1";
+            let queue = [];
+            try { queue = JSON.parse(localStorage.getItem(key) || "[]"); } catch (_) { queue = []; }
+            const normalized = CSIEngine.normalize(ultimaPendencia.termo_original);
+            if (!queue.some(item => CSIEngine.normalize(item.termo_original) === normalized)) {
+                queue.push(ultimaPendencia);
+                localStorage.setItem(key, JSON.stringify(queue, null, 2));
+            }
+            escreverConsole("\n<span class=\"success\">✓ Termo enviado para a fila de pendências.</span>\nEle permanece aguardando revisão humana.", true);
+            document.getElementById('pendingAction').hidden = true;
+        }
+
+        function exportarPendencias() {
+            const key = "csi.pending.review.v1";
+            let queue = [];
+            try { queue = JSON.parse(localStorage.getItem(key) || "[]"); } catch (_) { queue = []; }
+            const blob = new Blob([JSON.stringify(queue, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a"); a.href = url; a.download = "csi_pending_review.json"; a.click(); URL.revokeObjectURL(url);
         }
 
         function exportarFila() {
