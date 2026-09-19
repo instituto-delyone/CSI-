@@ -236,7 +236,7 @@
                 if (!response.ok) throw new Error(data.error || "Worker retornou HTTP " + response.status);
 
                 escreverConsole(
-                    "\n<span class=\"success\">✓ Proposta gravada no Notion.</span>\n<span class="notion">ID:</span> " +
+                    "\n<span class=\"success\">✓ Proposta gravada no Notion.</span>\n<span class=\"notion\">ID:</span> " +
                     (data.page_id || "—") +
                     "\n<span class=\"pending\">Status:</span> pending_review\n\nEla fica no CSI aguardando revisão/aceite; nada é promovido automaticamente.",
                     true
