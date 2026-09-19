@@ -193,6 +193,7 @@
                     });
 
                     ultimaProposta = CSIEngine.queueProposal(proposal);
+                    if (!candidate) mostrarPendencia(input, proposal);
 
                     escreverConsole(
                         `\\n[Proposta de Expansão]\\n<span class="pending">Código:</span> ${proposal.codigo_provisorio}\\n<span class="pending">Tipo:</span> ${proposal.tipo}\\n<span class="pending">Status:</span> pending_review\\n<span class="research">PubMed:</span> ${proposal.evidencias.length} evidências\\n\\nA UMLS identificou o conceito. A entrada ainda NÃO foi promovida automaticamente ao dicionário.`,
@@ -205,12 +206,14 @@
                 const research = await CSINCbi.searchPubMed(input, { retmax: 5 });
 
                 if (!research.results.length) {
-                    escreverConsole("\\nNenhuma evidência suficiente para gerar proposta.", true);
+                    mostrarPendencia(input, null);
+                    escreverConsole("\\nNenhuma associação encontrada. O termo pode ser enviado para pendências.", true);
                     return;
                 }
 
                 const proposal = CSIEngine.buildProposal(input, { research });
                 ultimaProposta = CSIEngine.queueProposal(proposal);
+                mostrarPendencia(input, proposal);
 
                 escreverConsole(
                     `\\n[Proposta bibliográfica]\\n<span class="pending">Código:</span> ${proposal.codigo_provisorio}\\n<span class="pending">Status:</span> pending_review\\n<span class="research">PubMed:</span> ${proposal.evidencias.length} evidências\\n\\nSem conceito UMLS, esta proposta é apenas bibliográfica e exige revisão semântica.`,
