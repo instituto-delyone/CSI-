@@ -75,7 +75,8 @@
         window.CSI_CONFIG = window.CSI_CONFIG || {
             ncbiEmail: "",
             UMLS_API_BASE: "https://diagnosys-umls-proxy.dr-delyone.workers.dev/api/umls",
-            NOTION_PROPOSAL_API: ""
+            NOTION_PROPOSAL_API: "",
+            PENDING_API: ""
         };
 
         let bancoDeDados = [];
@@ -275,8 +276,26 @@
             document.getElementById('pendingAction').hidden = false;
         }
 
-        function adicionarPendencia() {
+        async function adicionarPendencia() {
             if (!ultimaPendencia) return;
+            const endpoint = String(window.CSI_CONFIG?.PENDING_API || "").trim();
+            if (endpoint) {
+                try {
+                    const response = await fetch(endpoint, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+                        body: JSON.stringify({ pending: ultimaPendencia })
+                    });
+                    const data = await response.json().catch(() => ({}));
+                    if (!response.ok) throw new Error(data.error || "Worker HTTP " + response.status);
+                    escreverConsole("\n<span class=\"success\">✓ Termo gravado na pasta de pendências do CSI.</span>\nEle permanece aguardando revisão humana.", true);
+                    document.getElementById('pendingAction').hidden = true;
+                    return;
+                } catch (error) {
+                    escreverConsole("\n<span class=\"pending\">Não foi possível gravar no repositório.</span>\nA fila local foi preservada. Detalhe: " + escapeHtml(error.message), true);
+                }
+            }
+
             const key = "csi.pending.review.v1";
             let queue = [];
             try { queue = JSON.parse(localStorage.getItem(key) || "[]"); } catch (_) { queue = []; }
@@ -285,7 +304,7 @@
                 queue.push(ultimaPendencia);
                 localStorage.setItem(key, JSON.stringify(queue, null, 2));
             }
-            escreverConsole("\n<span class=\"success\">✓ Termo enviado para a fila de pendências.</span>\nEle permanece aguardando revisão humana.", true);
+            escreverConsole("\n<span class=\"success\">✓ Termo enviado para a fila local de pendências.</span>\nExporte a fila para versioná-la em data/pendencias/.", true);
             document.getElementById('pendingAction').hidden = true;
         }
 
