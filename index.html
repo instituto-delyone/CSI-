@@ -38,7 +38,7 @@
 
         <div class="input-group">
             <input type="text" id="termoInput" placeholder="Digite um termo. Ex: fever, espinha caída, avc..." autocomplete="off" autocapitalize="sentences" spellcheck="true" >
-            <button id="btnBuscar" disabled onclick="realizarBusca()">Traduzir</button>
+            <button id="btnBuscar" onclick="realizarBusca()">Traduzir</button>
         </div>
 
         <div class="console" id="terminal">Aguardando entrada de dados...</div>
@@ -110,7 +110,7 @@
             const input = document.getElementById('termoInput').value.trim();
             if (!input) return;
             if (!engineReady) {
-                escreverConsole("O motor ainda está carregando a biblioteca. Aguarde só um instante.");
+                escreverConsole("A biblioteca ainda está carregando. Tente novamente em um instante.");
                 return;
             }
 
